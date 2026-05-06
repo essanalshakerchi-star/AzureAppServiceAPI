@@ -26,8 +26,9 @@ namespace AzureAppServiceAPI.Controllers
         public async Task<IActionResult> AddCategory([FromBody] AddCategoryDTO dto)
         {
             var category = new Category { Name = dto.Name };
-            await _categoryService.AddCategory(category);
-            return Ok("Kategori skapad!");
+            await _categoryService.AddCategoryAsync(category);
+            return CreatedAtAction(nameof(GetCategoryById), new { id = category.Id },
+                new { id = category.Id, name = category.Name });  
         }
 
         [HttpDelete("{id}")]

@@ -41,7 +41,16 @@ namespace AzureAppServiceAPI.Controllers
                 CategoryId = dto.CategoryId
             };
             await _productService.AddProduct(product);
-            return Ok("Produkt skapad!");
+
+            return CreatedAtAction(nameof(GetProductById), new { id = product.Id },
+                new
+                {
+                    id = product.Id,
+                    name = product.Name,
+                    description = product.Description,
+                    price = product.Price,
+                    categoryId = product.CategoryId
+                });
         }
 
         [HttpPut]
