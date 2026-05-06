@@ -52,12 +52,12 @@ namespace AzureAppServiceAPI.Controllers
                     categoryId = product.CategoryId
                 });
         }
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDTO dto)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductDTO dto)
         {
-            var befintligProduct = await _productService.GetProductById(dto.Id);
-            if (befintligProduct == null) return NotFound("Produkten hittades inte");
+            var befintligProduct = await _productService.GetProductById(id);
+            if (befintligProduct == null)
+                return NotFound("Produkten hittades inte");
 
             var product = new Product
             {
@@ -67,7 +67,9 @@ namespace AzureAppServiceAPI.Controllers
                 Price = dto.Price,
                 CategoryId = dto.CategoryId
             };
+
             await _productService.UpdateProduct(product);
+
             return Ok(new
             {
                 id = product.Id,
@@ -75,9 +77,8 @@ namespace AzureAppServiceAPI.Controllers
                 description = product.Description,
                 price = product.Price,
                 categoryId = product.CategoryId
-            }); 
+            });
         }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
