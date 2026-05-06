@@ -53,7 +53,7 @@ namespace AzureAppServiceAPI.Controllers
                 });
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDTO dto)
         {
             var befintligProduct = await _productService.GetProductById(dto.Id);
@@ -61,7 +61,7 @@ namespace AzureAppServiceAPI.Controllers
 
             var product = new Product
             {
-                Id = dto.Id,
+                Id = id,
                 Name = dto.Name,
                 Description = dto.Description,
                 Price = dto.Price,
