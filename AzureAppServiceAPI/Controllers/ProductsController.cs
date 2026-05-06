@@ -68,7 +68,14 @@ namespace AzureAppServiceAPI.Controllers
                 CategoryId = dto.CategoryId
             };
             await _productService.UpdateProduct(product);
-            return Ok("Produkt uppdaterad!");
+            return Ok(new
+            {
+                id = product.Id,
+                name = product.Name,
+                description = product.Description,
+                price = product.Price,
+                categoryId = product.CategoryId
+            }); 
         }
 
         [HttpDelete("{id}")]
@@ -78,7 +85,7 @@ namespace AzureAppServiceAPI.Controllers
             if (product == null) return NotFound("Produkten hittades inte");
 
             await _productService.DeleteProduct(id);
-            return Ok("Produkt borttagen!");
+            return Ok(new { message = "Produkt borttagen!", id = id });
         }
     }
 }

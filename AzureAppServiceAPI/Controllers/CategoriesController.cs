@@ -22,13 +22,26 @@ namespace AzureAppServiceAPI.Controllers
             return Ok(await _categoryService.GetAllCategories());
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCategoryById(int id)
+        {
+            var categories = await _categoryService.GetAllCategories();
+            var category = categories.FirstOrDefault(c => c.Id == id);
+
+            if (category == null)
+                return NotFound("Kategorin hittades inte");
+
+            return Ok(category);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromBody] AddCategoryDTO dto)
         {
             var category = new Category { Name = dto.Name };
-            await _categoryService.AddCategoryAsync(category);
+            await _categoryService.AddCategory(category);
+
             return CreatedAtAction(nameof(GetCategoryById), new { id = category.Id },
-                new { id = category.Id, name = category.Name });  
+                new { id = category.Id, name = category.Name });
         }
 
         [HttpDelete("{id}")]
@@ -36,10 +49,12 @@ namespace AzureAppServiceAPI.Controllers
         {
             var categories = await _categoryService.GetAllCategories();
             var category = categories.FirstOrDefault(c => c.Id == id);
-            if (category == null) return NotFound("Kategorin hittades inte");
+
+            if (category == null)
+                return NotFound("Kategorin hittades inte");
 
             await _categoryService.DeleteCategory(id);
-            return Ok("Kategori borttagen!");
+            return NoContent();
         }
     }
 }
